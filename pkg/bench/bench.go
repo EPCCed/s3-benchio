@@ -23,7 +23,9 @@ package bench
 import (
 	"bytes"
 	"crypto/rand"
+	"crypto/tls"
 	"fmt"
+	"net/http"
 	"io"
 	"io/ioutil"
 	"sort"
@@ -104,10 +106,16 @@ func Mark(conf *Config) error {
 	if err := conf.validate(); err != nil {
 		return err
 	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
+
 	awsCfg := &aws.Config{
 		Credentials:      credentials.NewStaticCredentials(conf.AccessKey, conf.SecretKey, ""),
 		Region:           aws.String(conf.Region),
 		S3ForcePathStyle: aws.Bool(true),
+		HTTPClient:       client,
 	}
 	runner := Runner{
 		conf:      conf,
