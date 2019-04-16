@@ -116,6 +116,8 @@ func Mark(conf *Config) error {
 		Region:           aws.String(conf.Region),
 		S3ForcePathStyle: aws.Bool(true),
 		HTTPClient:       client,
+		// LogLevel:         aws.LogLevel(aws.LogDebug),
+		// LogLevel:         aws.LogLevel(aws.LogDebugWithHTTPBody),
 	}
 	runner := Runner{
 		conf:      conf,
